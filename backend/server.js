@@ -84,4 +84,22 @@ process.on('unhandledRejection', (err) => {
   console.error('[fatal] Unhandled promise rejection:', err.message);
 });
 
+// backend/server.js mein add karein
+import seedDatabase from './utils/seed.js'; // Ensure seed.js exports the function
+
+app.get('/api/v1/admin/seed-db-now', async (req, res) => {
+  try {
+    // Basic secret key protection
+    if (req.query.secret !== 'zaid_seed_2026') {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+    
+    // Call seed logic
+    await seedDatabase();
+    res.status(200).json({ success: true, message: 'Production Database successfully seeded!' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 export default app;
