@@ -340,7 +340,7 @@ const seedDatabase = async () => {
     console.log('[seed] Creating Comments and attaching to Posts...');
     for (let i = 0; i < posts.length; i++) {
       const currentPost = posts[i];
-      
+
       // Select 2 commentators for each post
       const commenter1 = users[(i + 1) % users.length];
       const commenter2 = users[(i + 2) % users.length];
@@ -375,11 +375,18 @@ const seedDatabase = async () => {
 
     console.log('[seed] Database successfully seeded with rich demo data!');
     console.log(`[seed] Created: ${users.length} Users, ${circles.length} Circles, ${posts.length} Posts.`);
-    process.exit(0);
+
+    // Agar direct CLI command run huyi ho tabhi process exit karein
+    if (process.argv[1] && process.argv[1].endsWith('seed.js')) {
+      process.exit(0);
+    }
   } catch (error) {
     console.error('[seed] Error seeding database:', error);
-    process.exit(1);
+    if (process.argv[1] && process.argv[1].endsWith('seed.js')) {
+      process.exit(1);
+    }
+    throw error;
   }
 };
 
-seedDatabase();
+export default seedDatabase;

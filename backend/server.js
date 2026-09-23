@@ -11,6 +11,7 @@ import authRoutes from './routes/authRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import circleRoutes from './routes/circleRoutes.js';
+import seedDatabase from './utils/seed.js'; // Seed function import
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
@@ -44,7 +45,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // ---------------------------------------------------------------------------
-// Health check — also reports whether we're on live MongoDB or mock data
+// Health check & Production Seed Route
 // ---------------------------------------------------------------------------
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
@@ -55,6 +56,19 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
+// Seed endpoint (404 Handler se pehle rakha hai)
+app.get('/api/v1/seed-db-now', async (req, res) => {
+  try {
+    if (req.query.secret !== 'zaid_seed_2026') {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+    await seedDatabase();
+    res.status(200).json({ success: true, message: 'Production Database successfully seeded!' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // ---------------------------------------------------------------------------
 // API routes
 // ---------------------------------------------------------------------------
@@ -63,6 +77,7 @@ app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/circles', circleRoutes);
 
+// Error handling middlewares (Hamesha end mein aayenge)
 app.use(notFoundHandler);
 app.use(errorHandler);
 
@@ -82,24 +97,6 @@ startServer();
 
 process.on('unhandledRejection', (err) => {
   console.error('[fatal] Unhandled promise rejection:', err.message);
-});
-
-// backend/server.js mein add karein
-import seedDatabase from './utils/seed.js'; // Ensure seed.js exports the function
-
-app.get('/api/v1/admin/seed-db-now', async (req, res) => {
-  try {
-    // Basic secret key protection
-    if (req.query.secret !== 'zaid_seed_2026') {
-      return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
-    
-    // Call seed logic
-    await seedDatabase();
-    res.status(200).json({ success: true, message: 'Production Database successfully seeded!' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
 });
 
 export default app;
