@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { dbState } from '../config/db.js';
 import User from '../models/User.js';
@@ -375,23 +376,49 @@ const posts = {
 // ---------------------------------------------------------------------------
 // COMMENTS
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// COMMENTS
+// ---------------------------------------------------------------------------
 const comments = {
   async listForPost(postId) {
     if (isLive()) {
-      return Comment.find({ post: postId }).sort({ createdAt: -1 }).populate('author', AUTHOR_FIELDS.join(' '));
+      // String ID ko Safe ObjectId conversion ya query fallback dena
+      const validPostId = mongoose.Types.ObjectId.isValid(postId)
+        ? new mongoose.Types.ObjectId(postId)
+        : postId;
+
+      return Comment.find({ post: validPostId })
+        .sort({ createdAt: -1 })
+        .populate('author', AUTHOR_FIELDS.join(' '));
     }
+
     return mockComments
-      .filter((c) => String(c.post) === String(postId))
+      .filter((c) => String(c.post || c.postId) === String(postId))
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .map(hydrateComment);
   },
 
   async create({ postId, authorId, content, parentComment }) {
     if (isLive()) {
-      const comment = await Comment.create({ post: postId, author: authorId, content, parentComment });
-      await Post.findByIdAndUpdate(postId, { $inc: { commentCount: 1 }, $push: { comments: comment._id } });
+      const validPostId = mongoose.Types.ObjectId.isValid(postId)
+        ? new mongoose.Types.ObjectId(postId)
+        : postId;
+
+      const comment = await Comment.create({
+        post: validPostId,
+        author: authorId,
+        content,
+        parentComment: parentComment || null,
+      });
+
+      await Post.findByIdAndUpdate(validPostId, {
+        $inc: { commentCount: 1 },
+        $push: { comments: comment._id },
+      });
+
       return Comment.findById(comment._id).populate('author', AUTHOR_FIELDS.join(' '));
     }
+
     const newComment = {
       _id: genId(),
       post: postId,
@@ -406,6 +433,7 @@ const comments = {
     const post = mockPosts.find((p) => String(p._id) === String(postId));
     if (post) {
       post.commentCount += 1;
+      post.comments = post.comments || [];
       post.comments.push(newComment._id);
     }
     return hydrateComment(newComment);
