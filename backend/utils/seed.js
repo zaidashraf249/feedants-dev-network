@@ -12,17 +12,16 @@ const seedDatabase = async () => {
     console.log('[seed] Connecting to MongoDB:', mongoUri);
     await mongoose.connect(mongoUri);
 
+    // 1. PEHLE PURANA DATA SEQUENTIALLY CLEAR KAREIN (Duplication Error Se Bachne Ke Liye)
     console.log('[seed] Clearing existing collections...');
-    await Promise.all([
-      User.deleteMany({}),
-      Post.deleteMany({}),
-      Circle.deleteMany({}),
-      Comment.deleteMany({}),
-    ]);
+    await User.deleteMany({});
+    await Post.deleteMany({});
+    await Circle.deleteMany({});
+    await Comment.deleteMany({});
 
     const hashedPassword = await bcrypt.hash('Feedants@123', 12);
 
-    // 1. SEED USERS
+    // 2. SEED USERS
     console.log('[seed] Creating Users...');
     const usersData = [
       {
@@ -100,7 +99,6 @@ const seedDatabase = async () => {
     const users = await User.insertMany(usersData);
     const [sarah, alex, elena, marcus, zaid] = users;
 
-    // Set Followers & Following Relationships
     sarah.followers = [alex._id, elena._id, marcus._id];
     sarah.following = [alex._id, elena._id];
     alex.followers = [sarah._id, zaid._id];
@@ -114,7 +112,7 @@ const seedDatabase = async () => {
 
     await Promise.all(users.map((u) => u.save()));
 
-    // 2. SEED CIRCLES
+    // 3. SEED CIRCLES
     console.log('[seed] Creating Circles...');
     const circlesData = [
       {
@@ -172,10 +170,9 @@ const seedDatabase = async () => {
     const circles = await Circle.insertMany(circlesData);
     const [cRust, cOS, cTS, cAI, cSystem] = circles;
 
-    // 3. SEED POSTS (3 posts per user = 15 posts total)
+    // 4. SEED POSTS
     console.log('[seed] Creating Posts...');
     const postsData = [
-      // Sarah's 3 Posts
       {
         author: sarah._id,
         circle: cRust._id,
@@ -210,8 +207,6 @@ const seedDatabase = async () => {
         likes: [alex._id, marcus._id],
         isPublished: true,
       },
-
-      // Alex's 3 Posts
       {
         author: alex._id,
         circle: cRust._id,
@@ -240,8 +235,6 @@ const seedDatabase = async () => {
         likes: [sarah._id, marcus._id, zaid._id],
         isPublished: true,
       },
-
-      // Elena's 3 Posts
       {
         author: elena._id,
         circle: cTS._id,
@@ -271,8 +264,6 @@ const seedDatabase = async () => {
         likes: [alex._id, zaid._id],
         isPublished: true,
       },
-
-      // Marcus's 3 Posts
       {
         author: marcus._id,
         circle: cSystem._id,
@@ -301,8 +292,6 @@ const seedDatabase = async () => {
         likes: [sarah._id, alex._id, elena._id, zaid._id],
         isPublished: true,
       },
-
-      // Zaid's 3 Posts
       {
         author: zaid._id,
         circle: cTS._id,
@@ -336,12 +325,10 @@ const seedDatabase = async () => {
 
     const posts = await Post.insertMany(postsData);
 
-    // 4. SEED COMMENTS & ATTACH REFS TO POSTS
+    // 5. SEED COMMENTS
     console.log('[seed] Creating Comments and attaching to Posts...');
     for (let i = 0; i < posts.length; i++) {
       const currentPost = posts[i];
-
-      // Select 2 commentators for each post
       const commenter1 = users[(i + 1) % users.length];
       const commenter2 = users[(i + 2) % users.length];
 
@@ -360,13 +347,11 @@ const seedDatabase = async () => {
         },
       ]);
 
-      // Update post comment references and counts
       currentPost.comments = createdComments.map((c) => c._id);
       currentPost.commentCount = createdComments.length;
       await currentPost.save();
     }
 
-    // Update Circle Post Counts
     for (const circle of circles) {
       const count = await Post.countDocuments({ circle: circle._id });
       circle.postCount = count;
@@ -376,7 +361,6 @@ const seedDatabase = async () => {
     console.log('[seed] Database successfully seeded with rich demo data!');
     console.log(`[seed] Created: ${users.length} Users, ${circles.length} Circles, ${posts.length} Posts.`);
 
-    // Agar direct CLI command run huyi ho tabhi process exit karein
     if (process.argv[1] && process.argv[1].endsWith('seed.js')) {
       process.exit(0);
     }
