@@ -124,9 +124,6 @@ const ProfilePage = () => {
   const activeTab = useSelector((state) => state.ui.profileTab);
 
   const { data: response, isLoading, error } = useGetUserProfileQuery(username);
-  // The backend wraps every payload as { success, data }. RTK Query's
-  // `data` here is that whole envelope, so the actual profile payload
-  // (user/posts/stats) lives one level deeper, at `response.data`.
   const profile = response?.data;
   const { data: allPostsData } = useGetPostsQuery({ page: 1, limit: 50 }, { skip: activeTab !== 'saved' });
 
@@ -144,7 +141,7 @@ const ProfilePage = () => {
 
   if (error || !profile?.user) {
     return (
-      <div className="card-surface p-8 text-center">
+      <div className="card-surface p-6 sm:p-8 text-center max-w-2xl mx-auto w-full">
         <p className="text-title-md font-semibold">User not found</p>
         <p className="text-body-sm text-brand-slate mt-1">The profile @{username} doesn't exist.</p>
       </div>
@@ -166,25 +163,25 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto flex flex-col gap-4">
+    <div className="max-w-2xl mx-auto flex flex-col gap-4 w-full overflow-hidden">
       <ProfileHeader user={user} isOwnProfile={isOwnProfile} onEditClick={() => navigate('/settings')} />
       <StatsStrip stats={stats} />
 
       {user.techStack?.length > 0 && (
-        <div className="card-surface p-space-md">
+        <div className="card-surface p-3.5 sm:p-space-md w-full">
           <h3 className="text-title-md font-bold mb-2">Tech stack</h3>
           <TechStackBadges techStack={user.techStack} />
         </div>
       )}
 
-      <div className="flex items-center gap-1 bg-surface-container-low rounded-lg p-1 w-fit">
+      <div className="flex items-center gap-1 bg-surface-container-low rounded-lg p-1 w-full sm:w-fit overflow-x-auto no-scrollbar">
         {PROFILE_TABS.map((tab) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => dispatch(setProfileTab(tab.id))}
             className={cn(
-              'px-3.5 py-1.5 rounded-md text-body-sm font-semibold transition-all',
+              'flex-1 sm:flex-initial px-3.5 py-1.5 rounded-md text-body-sm font-semibold transition-all whitespace-nowrap text-center',
               activeTab === tab.id
                 ? 'bg-surface-container-lowest shadow-level1 text-primary-container'
                 : 'text-brand-slate hover:text-on-surface'
@@ -195,13 +192,13 @@ const ProfilePage = () => {
         ))}
       </div>
 
-      <div className="flex flex-col gap-4">{tabContent[activeTab]}</div>
+      <div className="flex flex-col gap-4 w-full">{tabContent[activeTab]}</div>
     </div>
   );
 };
 
 const EmptyState = ({ message }) => (
-  <div className="card-surface p-8 text-center text-brand-slate">{message}</div>
+  <div className="card-surface p-6 sm:p-8 text-center text-brand-slate text-body-sm sm:text-body-md">{message}</div>
 );
 
 export default ProfilePage;

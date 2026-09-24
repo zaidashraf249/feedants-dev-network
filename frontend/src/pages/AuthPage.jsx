@@ -19,9 +19,9 @@ const AuthPage = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center py-12 px-4 overflow-hidden bg-surface">
-      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[720px] h-[450px] bg-gradient-to-tr from-primary-container/15 via-surface-container-high/40 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute -bottom-24 left-1/3 w-[500px] h-[360px] bg-gradient-to-bl from-primary-fixed/20 via-transparent to-transparent rounded-full blur-2xl pointer-events-none -z-10" />
+    <div className="relative min-h-screen flex flex-col items-center justify-center py-8 sm:py-12 px-3 sm:px-4 overflow-hidden bg-surface">
+      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[300px] sm:w-[720px] h-[300px] sm:h-[450px] bg-gradient-to-tr from-primary-container/15 via-surface-container-high/40 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute -bottom-24 left-1/3 w-[250px] sm:w-[500px] h-[200px] sm:h-[360px] bg-gradient-to-bl from-primary-fixed/20 via-transparent to-transparent rounded-full blur-2xl pointer-events-none -z-10" />
 
       <div className="w-full max-w-md flex flex-col items-center">
         <span className="text-label-sm font-semibold px-3 py-1 rounded-full bg-primary-fixed text-primary-container normal-case mb-4">
@@ -33,14 +33,14 @@ const AuthPage = () => {
           </span>
           <span className="text-title-md font-bold text-on-surface">Feedants</span>
         </div>
-        <h1 className="text-headline-md text-center font-bold text-on-surface tracking-tight">
+        <h1 className="text-title-lg sm:text-headline-md text-center font-bold text-on-surface tracking-tight px-2">
           {mode === 'signin' ? 'Welcome back to Feedants' : 'Create your developer account'}
         </h1>
-        <p className="text-body-md text-brand-slate text-center mt-2 max-w-sm">
+        <p className="text-body-sm sm:text-body-md text-brand-slate text-center mt-2 max-w-xs sm:max-w-sm">
           The home for technical writers, creators, and engineering builders.
         </p>
 
-        <div className="w-full card-surface mt-8 p-space-lg">
+        <div className="w-full card-surface mt-6 sm:mt-8 p-4 sm:p-space-lg">
           <div className="flex bg-surface-container rounded-lg p-1 mb-6">
             {['signin', 'signup'].map((tab) => (
               <button
@@ -48,7 +48,7 @@ const AuthPage = () => {
                 type="button"
                 onClick={() => dispatch(setAuthModalMode(tab))}
                 className={cn(
-                  'flex-1 py-2 rounded-md text-title-md font-semibold transition-all',
+                  'flex-1 py-2 rounded-md text-body-md sm:text-title-md font-semibold transition-all',
                   mode === tab ? 'bg-surface-container-lowest shadow-level1 text-primary-container' : 'text-brand-slate'
                 )}
               >
@@ -57,19 +57,17 @@ const AuthPage = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
             <button
               type="button"
-              title="Social sign-in isn't wired up in this demo"
-              className="h-10 flex items-center justify-center gap-2 rounded border border-brand-line text-body-sm font-semibold text-on-surface hover:bg-surface-container-low transition-colors opacity-70 cursor-not-allowed"
+              className="h-10 flex items-center justify-center gap-2 rounded border border-brand-line text-body-sm font-semibold text-on-surface hover:bg-surface-container-low transition-colors opacity-70 cursor-not-allowed w-full"
               disabled
             >
               <Github className="w-4 h-4" /> GitHub
             </button>
             <button
               type="button"
-              title="Social sign-in isn't wired up in this demo"
-              className="h-10 flex items-center justify-center gap-2 rounded border border-brand-line text-body-sm font-semibold text-on-surface hover:bg-surface-container-low transition-colors opacity-70 cursor-not-allowed"
+              className="h-10 flex items-center justify-center gap-2 rounded border border-brand-line text-body-sm font-semibold text-on-surface hover:bg-surface-container-low transition-colors opacity-70 cursor-not-allowed w-full"
               disabled
             >
               <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
@@ -84,26 +82,26 @@ const AuthPage = () => {
 
           <div className="flex items-center gap-3 mb-5">
             <div className="flex-1 h-px bg-brand-line" />
-            <span className="text-body-sm text-outline">or continue with email</span>
+            <span className="text-body-xs sm:text-body-sm text-outline whitespace-nowrap">or continue with email</span>
             <div className="flex-1 h-px bg-brand-line" />
           </div>
 
           {mode === 'signin' ? <LoginForm /> : <RegisterForm />}
         </div>
 
-        <div className="flex items-center gap-6 mt-8 text-brand-slate">
-          <span className="flex items-center gap-1.5 text-body-sm">
-            <Shield className="w-4 h-4" /> SOC-2 Type II
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 sm:mt-8 text-brand-slate">
+          <span className="flex items-center gap-1.5 text-body-xs sm:text-body-sm">
+            <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> SOC-2 Type II
           </span>
-          <span className="flex items-center gap-1.5 text-body-sm">
-            <Lock className="w-4 h-4" /> 256-bit TLS
+          <span className="flex items-center gap-1.5 text-body-xs sm:text-body-sm">
+            <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 256-bit TLS
           </span>
-          <span className="flex items-center gap-1.5 text-body-sm">
-            <Zap className="w-4 h-4" /> 99.99% Uptime
+          <span className="flex items-center gap-1.5 text-body-xs sm:text-body-sm">
+            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 99.99% Uptime
           </span>
         </div>
 
-        <div className="flex items-center gap-4 mt-4 text-body-sm text-outline">
+        <div className="flex items-center gap-4 mt-4 text-body-xs sm:text-body-sm text-outline">
           <Link to="/" className="hover:text-primary-container">
             Privacy Policy
           </Link>

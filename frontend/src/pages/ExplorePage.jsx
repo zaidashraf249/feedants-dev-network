@@ -40,12 +40,12 @@ const ExplorePage = () => {
 
   if (isFiltered) {
     return (
-      <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-        <div className="flex items-center justify-between">
-          <h1 className="text-headline-sm font-bold">
+      <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full px-2 sm:px-0">
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="text-title-lg sm:text-headline-sm font-bold truncate">
             {tag ? `#${tag}` : 'Circle posts'}
           </h1>
-          <button type="button" onClick={clearFilter} className="text-body-sm font-semibold text-primary-container hover:underline">
+          <button type="button" onClick={clearFilter} className="text-body-sm font-semibold text-primary-container hover:underline shrink-0">
             Clear filter
           </button>
         </div>
@@ -58,28 +58,28 @@ const ExplorePage = () => {
         ) : filteredPosts?.data?.length ? (
           filteredPosts.data.map((post) => <PostCard key={post._id || post.id} post={post} />)
         ) : (
-          <div className="card-surface p-8 text-center text-brand-slate">No posts found for this filter yet.</div>
+          <div className="card-surface p-6 sm:p-8 text-center text-brand-slate">No posts found for this filter yet.</div>
         )}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <section className="text-center max-w-2xl mx-auto">
-        <h1 className="text-headline-lg-mobile sm:text-headline-lg font-bold text-on-surface tracking-tight">
+    <div className="flex flex-col gap-8 sm:gap-10 w-full max-w-full overflow-hidden">
+      <section className="text-center max-w-2xl mx-auto px-2 sm:px-0">
+        <h1 className="text-headline-sm sm:text-headline-lg font-bold text-on-surface tracking-tight">
           Discover code, paradigms &amp; technical collectives
         </h1>
-        <p className="text-body-lg text-brand-slate mt-2">
+        <p className="text-body-md sm:text-body-lg text-brand-slate mt-2">
           Explore what the Feedants community is building, and find your people.
         </p>
-        <div className="relative mt-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
+        <div className="relative mt-4 sm:mt-6 w-full">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-outline" />
           <input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search tags, snippets, or technologies…"
-            className="w-full h-12 pl-12 pr-4 rounded-full border border-brand-line bg-surface-container-lowest text-body-md placeholder:text-outline focus:ring-2 focus:ring-primary-fixed outline-none"
+            className="w-full h-11 sm:h-12 pl-10 sm:pl-12 pr-4 rounded-full border border-brand-line bg-surface-container-lowest text-body-sm sm:text-body-md placeholder:text-outline focus:ring-2 focus:ring-primary-fixed outline-none"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && searchInput.trim()) {
                 setSearchParams({ tag: searchInput.trim().toLowerCase() });
@@ -89,23 +89,23 @@ const ExplorePage = () => {
         </div>
       </section>
 
-      <section>
-        <h2 className="text-headline-sm font-bold mb-4">Ecosystem Radar &amp; Velocity</h2>
+      <section className="w-full overflow-hidden">
+        <h2 className="text-title-lg sm:text-headline-sm font-bold mb-4">Ecosystem Radar &amp; Velocity</h2>
         <TechRadarGrid />
       </section>
 
-      <section>
+      <section className="w-full overflow-hidden">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-headline-sm font-bold">Active Guilds &amp; Technical Circles</h2>
+          <h2 className="text-title-lg sm:text-headline-sm font-bold">Active Guilds &amp; Technical Circles</h2>
         </div>
-        <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+        <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 no-scrollbar">
           {EXPLORE_CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               type="button"
               onClick={() => handleCategoryChange(cat.id)}
               className={cn(
-                'px-3.5 py-1.5 rounded-full text-body-sm font-semibold whitespace-nowrap transition-all border',
+                'px-3.5 py-1.5 rounded-full text-body-sm font-semibold whitespace-nowrap transition-all border shrink-0',
                 activeCategory === cat.id
                   ? 'bg-primary-container text-on-primary border-primary-container'
                   : 'border-brand-line text-brand-slate hover:border-brand-border-tint'
@@ -130,9 +130,9 @@ const ExplorePage = () => {
         )}
       </section>
 
-      <section>
-        <h2 className="text-headline-sm font-bold mb-4">Curated Technical Creators</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <section className="w-full">
+        <h2 className="text-title-lg sm:text-headline-sm font-bold mb-4">Curated Technical Creators</h2>
+        <div className="grid grid-cols-1 min-[480px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {(creatorsData?.data || []).map((creator) => (
             <CreatorCard key={creator._id || creator.id} creator={creator} />
           ))}

@@ -7,12 +7,6 @@ import { formatCompactNumber } from '../../utils/formatters';
 import { openAuthModal } from '../../store/slices/uiSlice';
 import { cn } from '../../utils/cn';
 
-/**
- * The like / comment / share / bookmark row shown at the bottom of
- * every PostCard. Likes and bookmarks use RTK Query mutations with
- * optimistic updates (see store/api/postsApi.js), so the UI reacts
- * instantly regardless of network latency.
- */
 const EngagementActions = ({ post, onCommentClick }) => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useAuth();
@@ -37,54 +31,54 @@ const EngagementActions = ({ post, onCommentClick }) => {
       setShareCopied(true);
       setTimeout(() => setShareCopied(false), 1800);
     } catch {
-      // clipboard may be unavailable — silently ignore
+      // clipboard may be unavailable
     }
   };
 
   return (
-    <div className="flex items-center justify-between pt-3 mt-1 border-t border-brand-line text-brand-slate">
+    <div className="flex items-center justify-between pt-2.5 sm:pt-3 mt-1 border-t border-brand-line text-brand-slate w-full">
       <button
         type="button"
         onClick={requireAuth(() => toggleLike(postId))}
         className={cn(
-          'flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-error-container/30 transition-colors text-body-sm font-medium',
+          'flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-1.5 rounded-lg hover:bg-error-container/30 transition-colors text-body-sm font-medium',
           post.isLiked && 'text-error'
         )}
         aria-pressed={post.isLiked}
       >
-        <Heart className={cn('w-[18px] h-[18px]', post.isLiked && 'fill-current')} />
-        {formatCompactNumber(post.likeCount || 0)}
+        <Heart className={cn('w-4 h-4 sm:w-[18px] sm:h-[18px]', post.isLiked && 'fill-current')} />
+        <span className="text-xs sm:text-body-sm">{formatCompactNumber(post.likeCount || 0)}</span>
       </button>
 
       <button
         type="button"
         onClick={() => onCommentClick?.(post)}
-        className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-primary-fixed/40 hover:text-primary-container transition-colors text-body-sm font-medium"
+        className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-1.5 rounded-lg hover:bg-primary-fixed/40 hover:text-primary-container transition-colors text-body-sm font-medium"
       >
-        <MessageCircle className="w-[18px] h-[18px]" />
-        {formatCompactNumber(post.commentCount || 0)}
+        <MessageCircle className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+        <span className="text-xs sm:text-body-sm">{formatCompactNumber(post.commentCount || 0)}</span>
       </button>
 
       <button
         type="button"
         onClick={handleShare}
-        className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-surface-container transition-colors text-body-sm font-medium"
+        className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-1.5 rounded-lg hover:bg-surface-container transition-colors text-body-sm font-medium"
       >
-        <Share2 className="w-[18px] h-[18px]" />
-        {shareCopied ? 'Link copied' : formatCompactNumber(post.shareCount || 0)}
+        <Share2 className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+        <span className="text-xs sm:text-body-sm">{shareCopied ? 'Copied' : formatCompactNumber(post.shareCount || 0)}</span>
       </button>
 
       <button
         type="button"
         onClick={requireAuth(() => toggleBookmark(postId))}
         className={cn(
-          'flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-primary-fixed/40 transition-colors',
+          'flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-1.5 rounded-lg hover:bg-primary-fixed/40 transition-colors',
           post.isBookmarked && 'text-primary-container'
         )}
         aria-pressed={post.isBookmarked}
         aria-label="Bookmark post"
       >
-        <Bookmark className={cn('w-[18px] h-[18px]', post.isBookmarked && 'fill-current')} />
+        <Bookmark className={cn('w-4 h-4 sm:w-[18px] sm:h-[18px]', post.isBookmarked && 'fill-current')} />
       </button>
     </div>
   );

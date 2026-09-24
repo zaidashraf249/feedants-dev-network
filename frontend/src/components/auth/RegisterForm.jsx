@@ -194,7 +194,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4 w-full">
       <Input
         label="Full name"
         icon={User}
@@ -226,8 +226,8 @@ const RegisterForm = () => {
         autoComplete="email"
       />
 
-      <div>
-        <div className="relative">
+      <div className="w-full">
+        <div className="relative w-full">
           <Input
             label="Password"
             type={showPassword ? 'text' : 'password'}
@@ -242,19 +242,19 @@ const RegisterForm = () => {
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-3 top-[38px] z-10 text-brand-slate hover:text-primary-container transition-colors"
+            className="absolute right-3 top-[34px] p-1 z-10 text-brand-slate hover:text-primary-container transition-colors"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
             {showPassword ? (
-              <EyeOff size={20} />
+              <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
             ) : (
-              <Eye size={20} />
+              <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
             )}
           </button>
         </div>
 
         {form.password && (
-          <div className="mt-2">
+          <div className="mt-2 w-full">
             <div className="h-1.5 w-full rounded-full bg-surface-container overflow-hidden">
               <div
                 className={cn(
@@ -265,7 +265,7 @@ const RegisterForm = () => {
               />
             </div>
 
-            <p className="text-body-sm text-brand-slate mt-1">
+            <p className="text-body-xs sm:text-body-sm text-brand-slate mt-1">
               {strength.label} password
             </p>
           </div>
@@ -273,7 +273,7 @@ const RegisterForm = () => {
       </div>
 
       {(submitError || registerError) && (
-        <p className="text-body-sm text-error bg-error-container/30 rounded px-3 py-2">
+        <p className="text-body-xs sm:text-body-sm text-error bg-error-container/30 rounded px-3 py-2 break-words">
           {submitError || registerError}
         </p>
       )}
@@ -282,12 +282,12 @@ const RegisterForm = () => {
         type="submit"
         size="lg"
         isLoading={isRegistering}
-        className="mt-1 w-full"
+        className="mt-1 w-full justify-center"
       >
         Create account
       </Button>
 
-      <p className="text-body-sm text-center text-brand-slate">
+      <p className="text-body-xs sm:text-body-sm text-center text-brand-slate mt-1">
         Already have an account?{' '}
         <button
           type="button"

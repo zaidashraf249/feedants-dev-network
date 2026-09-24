@@ -88,7 +88,6 @@
 // export default LoginForm;
 
 
-
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
@@ -135,7 +134,7 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3.5 sm:gap-4 w-full">
       <Input
         label="Email"
         type="email"
@@ -147,7 +146,7 @@ const LoginForm = () => {
         autoComplete="email"
       />
 
-      <div className="relative">
+      <div className="relative w-full">
         <Input
           label="Password"
           type={showPassword ? 'text' : 'password'}
@@ -162,19 +161,19 @@ const LoginForm = () => {
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-3 top-[38px] z-10 text-brand-slate hover:text-primary-container transition-colors"
+          className="absolute right-3 top-[34px] p-1 z-10 text-brand-slate hover:text-primary-container transition-colors"
           aria-label={showPassword ? 'Hide password' : 'Show password'}
         >
           {showPassword ? (
-            <EyeOff size={20} />
+            <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
           ) : (
-            <Eye size={20} />
+            <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
           )}
         </button>
       </div>
 
       {(submitError || loginError) && (
-        <p className="text-body-sm text-error bg-error-container/30 rounded px-3 py-2">
+        <p className="text-body-xs sm:text-body-sm text-error bg-error-container/30 rounded px-3 py-2 break-words">
           {submitError || loginError}
         </p>
       )}
@@ -183,12 +182,12 @@ const LoginForm = () => {
         type="submit"
         size="lg"
         isLoading={isLoggingIn}
-        className="mt-1 w-full"
+        className="mt-1 w-full justify-center"
       >
         Sign in
       </Button>
 
-      <p className="text-body-sm text-center text-brand-slate">
+      <p className="text-body-xs sm:text-body-sm text-center text-brand-slate mt-1">
         New to Feedants?{' '}
         <button
           type="button"
@@ -199,7 +198,7 @@ const LoginForm = () => {
         </button>
       </p>
 
-      <p className="text-body-sm text-center text-outline">
+      <p className="text-body-xs text-center text-outline break-all">
         Demo login:{' '}
         <span className="font-mono">sarah@feedants.dev</span> /{' '}
         <span className="font-mono">Feedants@123</span>

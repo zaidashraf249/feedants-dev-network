@@ -16,7 +16,7 @@ import useAuth from '../hooks/useAuth';
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const feedFilter = useSelector((state) => state.ui.feedFilter);
   const [page, setPage] = useState(1);
 
@@ -40,18 +40,18 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col xl:flex-row gap-6 w-full max-w-full overflow-hidden">
       <div className="flex-1 min-w-0 flex flex-col gap-4">
         <PostComposer />
 
-        <div className="flex items-center gap-1 bg-surface-container-low rounded-lg p-1 w-fit">
+        <div className="flex items-center gap-1 bg-surface-container-low rounded-lg p-1 w-full sm:w-fit overflow-x-auto no-scrollbar">
           {FEED_FILTERS.map((filter) => (
             <button
               key={filter.id}
               type="button"
               onClick={() => handleFilterChange(filter.id)}
               className={cn(
-                'px-3.5 py-1.5 rounded-md text-body-sm font-semibold transition-all',
+                'flex-1 sm:flex-initial px-3.5 py-1.5 rounded-md text-body-sm font-semibold transition-all whitespace-nowrap text-center',
                 feedFilter === filter.id
                   ? 'bg-surface-container-lowest shadow-level1 text-primary-container'
                   : 'text-brand-slate hover:text-on-surface'
@@ -69,11 +69,11 @@ const HomePage = () => {
             ))}
           </div>
         ) : posts.length === 0 ? (
-          <div className="card-surface p-8 text-center text-brand-slate">
+          <div className="card-surface p-6 sm:p-8 text-center text-brand-slate text-body-sm sm:text-body-md">
             No posts yet. Be the first to share something with the community.
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-full">
             {posts.map((post) => (
               <PostCard key={post._id || post.id} post={post} />
             ))}
@@ -85,21 +85,21 @@ const HomePage = () => {
             variant="secondary"
             isLoading={isFetching && page > 1}
             onClick={() => setPage((p) => p + 1)}
-            className="self-center mt-2"
+            className="self-center mt-2 w-full sm:w-auto"
           >
             Load more
           </Button>
         )}
       </div>
 
-      <aside className="hidden xl:block w-72 shrink-0 flex flex-col gap-4">
+      <aside className="hidden xl:flex xl:w-72 shrink-0 flex-col gap-4">
         <div className="card-surface p-space-md">
           <h3 className="text-title-md font-bold mb-3">Creators to follow</h3>
           <div className="flex flex-col gap-3">
             {(creatorsData?.data || []).slice(0, 4).map((creator) => (
-              <Link key={creator._id || creator.id} to={`/profile/${creator.username}`} className="flex items-center gap-2.5">
-                <Avatar src={creator.avatar} name={creator.name} size="sm" />
-                <div className="min-w-0">
+              <Link key={creator._id || creator.id} to={`/profile/${creator.username}`} className="flex items-center gap-2.5 min-w-0">
+                <Avatar src={creator.avatar} name={creator.name} size="sm" className="shrink-0" />
+                <div className="min-w-0 flex-1">
                   <p className="text-body-sm font-semibold truncate">{creator.name}</p>
                   <p className="text-body-sm text-brand-slate truncate">@{creator.username}</p>
                 </div>
@@ -118,7 +118,7 @@ const HomePage = () => {
               <Link
                 key={circle._id || circle.id}
                 to={`/explore?circle=${circle._id || circle.id}`}
-                className="text-body-sm text-brand-slate hover:text-primary-container"
+                className="text-body-sm text-brand-slate hover:text-primary-container truncate"
               >
                 {circle.name}
               </Link>

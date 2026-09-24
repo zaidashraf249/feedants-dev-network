@@ -4,11 +4,6 @@ import CodeBlock from '../ui/CodeBlock';
 
 const COLLAPSE_LINE_THRESHOLD = 14;
 
-/**
- * Wraps the generic ui/CodeBlock with feed-specific behavior: snippets
- * longer than a threshold start collapsed with a "Show more" affordance
- * so the feed stays scannable.
- */
 const CodeSnippetBlock = ({ codeSnippet }) => {
   const [expanded, setExpanded] = useState(false);
   if (!codeSnippet?.code) return null;
@@ -17,13 +12,15 @@ const CodeSnippetBlock = ({ codeSnippet }) => {
   const isLong = lineCount > COLLAPSE_LINE_THRESHOLD;
 
   return (
-    <div className="mt-3">
-      <CodeBlock
-        code={codeSnippet.code}
-        language={codeSnippet.language}
-        filename={codeSnippet.filename}
-        maxHeight={isLong && !expanded ? '260px' : 'none'}
-      />
+    <div className="mt-3 w-full max-w-full overflow-hidden">
+      <div className="w-full overflow-x-auto rounded-lg">
+        <CodeBlock
+          code={codeSnippet.code}
+          language={codeSnippet.language}
+          filename={codeSnippet.filename}
+          maxHeight={isLong && !expanded ? '260px' : 'none'}
+        />
+      </div>
       {isLong && (
         <button
           type="button"

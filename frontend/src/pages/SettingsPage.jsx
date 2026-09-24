@@ -43,18 +43,18 @@ const SettingsPage = () => {
   if (!user) return null;
 
   return (
-    <div className="max-w-2xl mx-auto flex flex-col gap-4">
-      <h1 className="text-headline-sm font-bold">Edit profile</h1>
+    <div className="max-w-2xl mx-auto flex flex-col gap-4 w-full overflow-hidden">
+      <h1 className="text-title-lg sm:text-headline-sm font-bold">Edit profile</h1>
 
-      <form onSubmit={handleSubmit} className="card-surface p-space-lg flex flex-col gap-5">
-        <div className="flex items-center gap-4">
-          <Avatar src={form.avatar} name={form.name} size="lg" />
+      <form onSubmit={handleSubmit} className="card-surface p-4 sm:p-space-lg flex flex-col gap-4 sm:gap-5 w-full">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <Avatar src={form.avatar} name={form.name} size="lg" className="shrink-0" />
           <Input
             label="Avatar URL"
             value={form.avatar}
             onChange={handleChange('avatar')}
             placeholder="https://…"
-            containerClassName="flex-1"
+            containerClassName="w-full flex-1"
           />
         </div>
 
@@ -74,11 +74,11 @@ const SettingsPage = () => {
             onChange={handleChange('bio')}
             rows={4}
             maxLength={500}
-            className="w-full rounded border border-brand-line p-3 text-body-md outline-none focus:ring-2 focus:ring-primary-fixed resize-none"
+            className="w-full rounded border border-brand-line p-3 text-body-sm sm:text-body-md outline-none focus:ring-2 focus:ring-primary-fixed resize-none"
           />
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 w-full">
           <span className="text-label-md font-semibold text-on-surface">Tech stack</span>
           <TechStackBadges
             techStack={form.techStack}
@@ -93,7 +93,7 @@ const SettingsPage = () => {
           </p>
         )}
 
-        <Button type="submit" isLoading={isLoading} className="self-start">
+        <Button type="submit" isLoading={isLoading} className="w-full sm:w-auto self-start justify-center">
           <Save className="w-4 h-4" /> Save changes
         </Button>
       </form>
